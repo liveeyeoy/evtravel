@@ -11,15 +11,44 @@ const visibleCountries = countries.filter((country) => country.published);
     <p class="eyebrow">Sähköautoilijan Euroopan käsikirja</p>
     <h1>Kaikki mitä tarvitset sähköautomatkalle Euroopassa.</h1>
     <p>Maakohtaiset tietullit, latausverkot, lautat, tarvikkeet ja reittioppaat yhdessä mobiiliystävällisessä palvelussa.</p>
-    <input class="search" placeholder="Mihin maahan olet matkalla?">
+    <input id="countrySearch" class="search" placeholder="Mihin maahan olet matkalla?">
   </section>
 
   <section>
     <h2>Maat</h2>
-    <div class="grid">
-      {visibleCountries.map((country) => <CountryCard country={country} />)}
+    <div id="countryGrid" class="grid">
+      {visibleCountries.map((country) => (
+        <div class="country-item" data-name={country.name.toLowerCase()}>
+          <CountryCard country={country} />
+        </div>
+      ))}
     </div>
+    <p id="noResults" style="display:none;">Maata ei löytynyt julkaistuista oppaista.</p>
   </section>
 
   <section class="ad">Mainospaikka / affiliate-nosto</section>
+
+  <script>
+    const searchInput = document.getElementById('countrySearch');
+    const items = document.querySelectorAll('.country-item');
+    const noResults = document.getElementById('noResults');
+
+    searchInput?.addEventListener('input', () => {
+      const query = searchInput.value.toLowerCase().trim();
+      let visibleCount = 0;
+
+      items.forEach((item) => {
+        const name = item.getAttribute('data-name') || '';
+        const match = name.includes(query);
+
+        item.style.display = match ? '' : 'none';
+
+        if (match) visibleCount++;
+      });
+
+      if (noResults) {
+        noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+      }
+    });
+  </script>
 </BaseLayout>
