@@ -1,7 +1,77 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import countries from '../../../data/countries-fi.json';
-export function getStaticPaths(){return countries.map(country=>({params:{slug:country.slug},props:{country}}));}
+
+export function getStaticPaths() {
+  return countries
+    .filter((country) => country.published)
+    .map((country) => ({
+      params: { slug: country.slug },
+      props: { country }
+    }));
+}
+
 const { country } = Astro.props;
 ---
-<BaseLayout title={`${country.name} sähköautolla – EVTravel.eu`} description={country.summary}><article class="country"><p class="eyebrow">{country.flag} Maaopas</p><h1>{country.name} sähköautolla</h1><p class="lead">{country.summary}</p><div class="info-grid"><section class="box"><h2>Tietullit nyt</h2><p>{country.tolls}</p></section><section class="box"><h2>Latausverkot pitkälle matkalle</h2><p>{country.charging}</p></section><section class="box"><h2>Autolautat ja EV-säännöt</h2><p>{country.ferries}</p></section><section class="box"><h2>Ympäristövyöhykkeet</h2><p>{country.low_emission_zones}</p></section><section class="box"><h2>Maksutavat</h2><p>{country.payment_methods}</p></section><section class="box"><h2>Erityishuomiot</h2><p>{country.special_notes}</p></section></div><section class="sources"><h2>Lähteet</h2><ul>{country.sources.map((source)=><li><a href={source}>{source}</a></li>)}</ul><p>Päivitetty: {country.updated_at}</p></section><section class="feedback"><h2>Onko tieto muuttunut?</h2><form><input placeholder="Nimi / nimimerkki"><input placeholder="Sähköposti"><textarea placeholder="Kommentti ja lähde"></textarea><button>Lähetä tarkistettavaksi</button></form></section></article></BaseLayout>
+
+<BaseLayout title={`${country.name} sähköautolla – EVTravel.eu`} description={country.summary}>
+  <article class="country">
+    <p class="eyebrow">{country.flag} Maaopas</p>
+    <h1>{country.name} sähköautolla</h1>
+    <p class="lead">{country.summary}</p>
+
+    <div class="info-grid">
+      <section class="box">
+        <h2>Tietullit nyt</h2>
+        <p>{country.tolls}</p>
+      </section>
+
+      <section class="box">
+        <h2>Latausverkot pitkälle matkalle</h2>
+        <p>{country.charging}</p>
+      </section>
+
+      <section class="box">
+        <h2>Autolautat ja EV-säännöt</h2>
+        <p>{country.ferries}</p>
+      </section>
+
+      <section class="box">
+        <h2>Ympäristövyöhykkeet</h2>
+        <p>{country.low_emission_zones}</p>
+      </section>
+
+      <section class="box">
+        <h2>Maksutavat</h2>
+        <p>{country.payment_methods}</p>
+      </section>
+
+      <section class="box">
+        <h2>Erityishuomiot</h2>
+        <p>{country.special_notes}</p>
+      </section>
+    </div>
+
+    {country.sources && country.sources.length > 0 && (
+      <section class="sources">
+        <h2>Lähteet</h2>
+        <ul>
+          {country.sources.map((source) => (
+            <li><a href={source} target="_blank" rel="noopener noreferrer">{source}</a></li>
+          ))}
+        </ul>
+        <p>Päivitetty: {country.updated_at}</p>
+      </section>
+    )}
+
+    <section class="feedback">
+      <h2>Onko tieto muuttunut?</h2>
+      <form>
+        <input placeholder="Nimi / nimimerkki">
+        <input placeholder="Sähköposti">
+        <textarea placeholder="Kommentti ja lähde"></textarea>
+        <button>Lähetä tarkistettavaksi</button>
+      </form>
+    </section>
+  </article>
+</BaseLayout>
