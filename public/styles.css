@@ -368,3 +368,15 @@ button:hover {
     max-width: none;
   }
 }
+
+.brand img {
+  height: 100px;
+  width: auto;
+  display: block;
+}
+
+@media (max-width: 720px) {
+  .brand img {
+    height: 40px;
+  }
+}
