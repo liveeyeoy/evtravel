@@ -1,36 +1,45 @@
+export async function onRequestGet() {
+  return Response.redirect("/fi/", 302);
+}
+
 export async function onRequestPost({ request, env }: any) {
-  const formData = await request.formData();
+  try {
+    const formData = await request.formData();
 
-  const country = formData.get("country") || "";
-  const name = formData.get("name") || "";
-  const email = formData.get("email") || "";
-  const message = formData.get("message") || "";
-  const website = formData.get("website") || "";
-  const token = formData.get("cf-turnstile-response");
+    const country = String(formData.get("country") || "");
+    const name = String(formData.get("name") || "");
+    const email = String(formData.get("email") || "");
+    const message = String(formData.get("message") || "");
+    const website = String(formData.get("website") || "");
+    const token = formData.get("cf-turnstile-response");
 
-  if (website) {
-    return new Response("OK", { status: 200 });
-  }
+    if (website) {
+      return Response.redirect("/fi/kiitos/", 303);
+    }
 
-  if (!message || !token) {
-    return new Response("Missing required fields", { status: 400 });
-  }
+    if (!message || !token) {
+      return new Response("Puuttuva viesti tai Turnstile-varmennus.", { status: 400 });
+    }
 
-  const verify = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-    method: "POST",
-    body: new URLSearchParams({
-      secret: env.TURNSTILE_SECRET_KEY,
-      response: token.toString(),
-    }),
-  });
+    if (!env.TURNSTILE_SECRET_KEY || !env.RESEND_API_KEY || !env.FEEDBACK_TO_EMAIL) {
+      return new Response("Server configuration missing.", { status: 500 });
+    }
 
-  const result: any = await verify.json();
+    const verify = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      body: new URLSearchParams({
+        secret: env.TURNSTILE_SECRET_KEY,
+        response: String(token),
+      }),
+    });
 
-  if (!result.success) {
-    return new Response("Turnstile failed", { status: 400 });
-  }
+    const result: any = await verify.json();
 
-  const body = `
+    if (!result.success) {
+      return new Response("Turnstile failed.", { status: 400 });
+    }
+
+    const body = `
 Uusi EVTravel-palautte:
 
 Maa: ${country}
@@ -41,19 +50,27 @@ Viesti:
 ${message}
 `;
 
-  await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${env.RESEND_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: "EVTravel <onboarding@resend.dev>",
-      to: env.FEEDBACK_TO_EMAIL,
-      subject: `EVTravel palaute: ${country}`,
-      text: body,
-    }),
-  });
+    const resendResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "EVTravel <onboarding@resend.dev>",
+        to: env.FEEDBACK_TO_EMAIL,
+        subject: `EVTravel palaute: ${country || "tuntematon maa"}`,
+        text: body,
+      }),
+    });
 
-  return Response.redirect("/fi/kiitos/", 303);
+    if (!resendResponse.ok) {
+      const errorText = await resendResponse.text();
+      return new Response(`Email send failed: ${errorText}`, { status: 500 });
+    }
+
+    return Response.redirect("/fi/kiitos/", 303);
+  } catch (error: any) {
+    return new Response(`Function error: ${error?.message || "Unknown error"}`, { status: 500 });
+  }
 }
