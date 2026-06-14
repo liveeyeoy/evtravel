@@ -1,4 +1,39 @@
 ---
 const { title='EVTravel.eu', description='Sähköautomatkailijan Euroopan käsikirja' } = Astro.props;
 ---
-<html lang="fi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{title}</title><meta name="description" content={description}><link rel="stylesheet" href="/styles.css"></head><body><header class="top"><a href="/fi/" class="brand">EVTravel.eu</a><nav><a href="/fi/maat/ruotsi/">Maat</a><a href="/fi/tarvikkeet/">Tarvikkeet</a><a href="/fi/sovellukset/">Sovellukset</a><a href="/fi/artikkelit/">Artikkelit</a></nav></header><main><slot /></main><footer>© EVTravel.eu · Tiedot tarkistettava ennen matkaa</footer></body></html>
+
+<html lang="fi">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <link rel="stylesheet" href="/styles.css">
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NVG36F770J"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-NVG36F770J');
+    </script>
+  </head>
+
+  <body>
+    <header class="top">
+      <a href="/fi/" class="brand">EVTravel.eu</a>
+      <nav>
+        <a href="/fi/">Maat</a>
+        <a href="/fi/tarvikkeet/">Tarvikkeet</a>
+        <a href="/fi/sovellukset/">Sovellukset</a>
+        <a href="/fi/artikkelit/">Artikkelit</a>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer>© EVTravel.eu · Tiedot tarkistettava ennen matkaa</footer>
+  </body>
+</html>
