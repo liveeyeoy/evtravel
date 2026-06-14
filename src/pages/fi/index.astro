@@ -17,11 +17,7 @@ const visibleCountries = countries.filter((country) => country.published);
   <section>
     <h2>Maat</h2>
     <div id="countryGrid" class="grid">
-      {visibleCountries.map((country) => (
-        <div class="country-item" data-name={country.name.toLowerCase()}>
-          <CountryCard country={country} />
-        </div>
-      ))}
+      {visibleCountries.map((country) => <CountryCard country={country} />)}
     </div>
     <p id="noResults" style="display:none;">Maata ei löytynyt julkaistuista oppaista.</p>
   </section>
@@ -30,19 +26,17 @@ const visibleCountries = countries.filter((country) => country.published);
 
   <script>
     const searchInput = document.getElementById('countrySearch');
-    const items = document.querySelectorAll('.country-item');
+    const cards = document.querySelectorAll('#countryGrid .card');
     const noResults = document.getElementById('noResults');
 
     searchInput?.addEventListener('input', () => {
       const query = searchInput.value.toLowerCase().trim();
       let visibleCount = 0;
 
-      items.forEach((item) => {
-        const name = item.getAttribute('data-name') || '';
-        const match = name.includes(query);
-
-        item.style.display = match ? '' : 'none';
-
+      cards.forEach((card) => {
+        const text = card.textContent?.toLowerCase() || '';
+        const match = text.includes(query);
+        card.style.display = match ? 'block' : 'none';
         if (match) visibleCount++;
       });
 
