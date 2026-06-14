@@ -1,5 +1,5 @@
-export async function onRequestGet() {
-  return Response.redirect("/fi/", 302);
+export async function onRequestGet({ request }: any) {
+  return Response.redirect(new URL("/fi/", request.url).toString(), 302);
 }
 
 export async function onRequestPost({ request, env }: any) {
@@ -14,7 +14,7 @@ export async function onRequestPost({ request, env }: any) {
     const token = formData.get("cf-turnstile-response");
 
     if (website) {
-      return Response.redirect("/fi/kiitos/", 303);
+      return Response.redirect(new URL("/fi/kiitos/", request.url).toString(), 303);
     }
 
     if (!message || !token) {
@@ -40,7 +40,7 @@ export async function onRequestPost({ request, env }: any) {
     }
 
     const body = `
-Uusi EVTravel-palautte:
+Uusi EVTravel-palaute:
 
 Maa: ${country}
 Nimi: ${name}
@@ -69,7 +69,7 @@ ${message}
       return new Response(`Email send failed: ${errorText}`, { status: 500 });
     }
 
-    return Response.redirect("/fi/kiitos/", 303);
+    return Response.redirect(new URL("/fi/kiitos/", request.url).toString(), 303);
   } catch (error: any) {
     return new Response(`Function error: ${error?.message || "Unknown error"}`, { status: 500 });
   }
