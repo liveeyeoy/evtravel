@@ -1,0 +1,4 @@
+---
+const { country } = Astro.props;
+---
+<a class="card" href={`/fi/maat/${country.slug}/`}><div class="flag">{country.flag}</div><h3>{country.name}</h3><p>{country.summary}</p></a>

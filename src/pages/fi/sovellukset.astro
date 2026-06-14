@@ -1,0 +1,5 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import apps from '../../data/apps-fi.json';
+---
+<BaseLayout title="Suositellut sovellukset sähköautomatkalle"><h1>Suositellut sovellukset</h1>{apps.map(group=><section><h2>{group.category}</h2><div class="grid">{group.items.map(app=><div class="card"><h3>{app.name}</h3><p>{app.description}</p></div>)}</div></section>)}</BaseLayout>

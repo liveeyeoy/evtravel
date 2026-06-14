@@ -1,0 +1,6 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CountryCard from '../../components/CountryCard.astro';
+import countries from '../../data/countries-fi.json';
+---
+<BaseLayout title="EVTravel.eu – sähköautomatkailu Euroopassa"><section class="hero"><p class="eyebrow">Sähköautoilijan Euroopan käsikirja</p><h1>Kaikki mitä tarvitset sähköautomatkalle Euroopassa.</h1><p>Maakohtaiset tietullit, latausverkot, lautat, tarvikkeet ja reittioppaat yhdessä mobiiliystävällisessä palvelussa.</p><input class="search" placeholder="Mihin maahan olet matkalla?"></section><section><h2>Maat</h2><div class="grid">{countries.map((country)=><CountryCard country={country}/>)}</div></section><section class="ad">Mainospaikka / affiliate-nosto</section></BaseLayout>

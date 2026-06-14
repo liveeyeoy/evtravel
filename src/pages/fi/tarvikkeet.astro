@@ -1,0 +1,6 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const required=['Huomioliivi','Ensiapulaukku','Varoituskolmio','Sammutin','Varalamput','Lumiketjut','Hinausköysi'];
+const ev=['Type 2 -kaapeli','Schuko-laturi','Rengaskompressori','Rengaspaikkaussarja','OBD-lukija','Varavirtalähde'];
+---
+<BaseLayout title="Tarvikkeet sähköautomatkalle Eurooppaan"><h1>Tarvikkeet sähköautomatkalle</h1><div class="info-grid"><section class="box"><h2>Pakolliset ja hyödylliset tarvikkeet</h2><ul>{required.map(i=><li>{i}</li>)}</ul></section><section class="box"><h2>EV-tarvikkeet</h2><ul>{ev.map(i=><li>{i}</li>)}</ul></section></div><section class="ad">Affiliate-paikka</section></BaseLayout>
