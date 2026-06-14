@@ -66,12 +66,20 @@ const { country } = Astro.props;
 
     <section class="feedback">
       <h2>Onko tieto muuttunut?</h2>
-      <form>
-        <input placeholder="Nimi / nimimerkki">
-        <input placeholder="Sähköposti">
-        <textarea placeholder="Kommentti ja lähde"></textarea>
-        <button>Lähetä tarkistettavaksi</button>
-      </form>
+        <form method="POST" action="/api/feedback">
+  <input type="hidden" name="country" value={country.name}>
+  <input placeholder="Nimi / nimimerkki" name="name">
+  <input placeholder="Sähköposti" name="email" type="email">
+  <textarea placeholder="Kommentti ja lähde" name="message" required></textarea>
+
+  <input type="text" name="website" style="display:none">
+
+  <div class="cf-turnstile" data-sitekey="0x4AAAAAADkh75wsb6atR_qi"></div>
+
+  <button>Lähetä tarkistettavaksi</button>
+</form>
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
     </section>
   </article>
 </BaseLayout>
